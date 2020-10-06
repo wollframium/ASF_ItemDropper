@@ -105,7 +105,7 @@ namespace ASFItemDropManager
                 }
 
             }
-            return $"No Item dropped.";
+            return $"No item drop for game {appid} with playtime {appidPlaytimeForever}.";
         }
         internal string itemIdleingStop(Bot bot)
         {
