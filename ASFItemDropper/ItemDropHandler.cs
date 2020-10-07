@@ -107,7 +107,7 @@ namespace ASFItemDropManager
 
             }
             Console.WriteLine("Sniper677");
-            return $"No item drop for game {appid} with playtime {appidPlaytimeForever}.";
+            return $"No item drop for game {appid} with playtime {appidPlaytimeForever}... {resultGamesPlayed}";
         }
         internal string itemIdleingStop(Bot bot)
         {
