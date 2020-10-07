@@ -97,6 +97,7 @@ namespace ASFItemDropManager
                     {
                         summstring += $"Item dropped => ItemID: {appid}_{item.Itemid}, ItemDefinition: {item.Itemdefid} @ {item.StateChangedTimestamp} (playtime: {appidPlaytimeForever}) \n";
                     }
+                    Console.WriteLine("Sniper677");
                     return summstring;
                 }
                 catch (Exception e)
@@ -105,6 +106,7 @@ namespace ASFItemDropManager
                 }
 
             }
+            Console.WriteLine("Sniper677");
             return $"No item drop for game {appid} with playtime {appidPlaytimeForever}.";
         }
         internal string itemIdleingStop(Bot bot)
