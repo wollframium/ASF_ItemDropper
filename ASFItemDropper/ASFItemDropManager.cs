@@ -51,6 +51,8 @@ namespace ASFItemDropManager
                             return await CheckItem(steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ",")).ConfigureAwait(false);
                         case "IDROP" when args.Length > 2:
                             return await CheckItem(steamID, bot, args[1], Utilities.GetArgsAsText(args, 2, ",")).ConfigureAwait(false);
+						case "IDROPDEFLIST"
+						    return await ItemDropListDef(steamID, bot).ConfigureAwait(false);
                         default:
                             return null;
                     }
@@ -101,6 +103,19 @@ namespace ASFItemDropManager
                 return bot.Commands.FormatBotResponse(string.Format(Strings.ErrorIsEmpty, nameof(ItemDropHandlers)));
             }
             return bot.Commands.FormatBotResponse(await Task.Run<string>(() => ItemDropHandler.itemIdleingStop(bot)).ConfigureAwait(false));
+
+        }
+		private static async Task<string?> ItemDropListDef(ulong steamID, Bot bot)
+        {
+            var idldstring = "";
+            idldstring += $"# Item Drop List Definition\n";
+			idldstring += $"Killing Floor 2: 232090 910000\n";
+			idldstring += $"Unturned: 304930 10000\n";
+			idldstring += $"Payday 2: 218620 1\n";
+			idldstring += $"Rust: 252490 10\n";
+			idldstring += $"###";
+
+            return idldstring;
 
         }
         private static async Task<string?> CheckItem(ulong steamID, Bot bot, string appid, string itemdefId)
