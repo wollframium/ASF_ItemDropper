@@ -51,7 +51,7 @@ namespace ASFItemDropManager
                         case "IDROP" when args.Length > 2:
                             return await CheckItem(steamID, bot, args[1], Utilities.GetArgsAsText(args, 2, ",")).ConfigureAwait(false);
                         case "IDROPDEFLIST":
-                            return await ItemDropDefList(steamID, bot).ConfigureAwait(false);
+                            return await ItemDropDefList(steamID).ConfigureAwait(false);
                         default:
                             return null;
                     }
@@ -105,7 +105,7 @@ namespace ASFItemDropManager
 
         }
 
-        private static async Task<string?> ItemDropDefList(ulong steamID, Bot bot)
+        private static async Task<string?> ItemDropDefList(ulong steamID)
         {
             if (!bot.HasPermission(steamID, BotConfig.EPermission.Master))
             {
