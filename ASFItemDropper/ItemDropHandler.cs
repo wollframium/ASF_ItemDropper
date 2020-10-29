@@ -95,9 +95,8 @@ namespace ASFItemDropManager
 
                     foreach (var item in QuickType.ItemList.FromJson(consumePlaytime.item_json))
                     {
-                        summstring += $"Item dropped => ItemID: {appid}_{item.Itemid}, ItemDefinition: {item.Itemdefid} @ {item.StateChangedTimestamp} (playtime: {appidPlaytimeForever}) \n";
+                        summstring += $"Item drop @ {item.StateChangedTimestamp} => i.ID: {appid}_{item.Itemid}, i.Def: {item.Itemdefid} (playtime: {appidPlaytimeForever})";
                     }
-                    Console.WriteLine("Sniper677");
                     return summstring;
                 }
                 catch (Exception e)
@@ -106,8 +105,7 @@ namespace ASFItemDropManager
                 }
 
             }
-            Console.WriteLine("Sniper677");
-            return $"No item drop for game {appid} with playtime {appidPlaytimeForever}... {resultGamesPlayed}";
+            return $"No item drop for game {appid} with playtime {appidPlaytimeForever}.";
         }
         internal string itemIdleingStop(Bot bot)
         {
