@@ -105,7 +105,7 @@ namespace ASFItemDropManager
 
         }
 
-        private static async Task<string?> ItemDropDefList(ulong steamID)
+        private static async Task<string?> ItemDropDefList(ulong steamID, Bot bot)
         {
             if (!bot.HasPermission(steamID, BotConfig.EPermission.Master))
             {
