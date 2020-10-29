@@ -117,6 +117,18 @@ namespace ASFItemDropManager
             Client.Send(response);
             return "Stop idling ";
         }
+		internal string itemDropDefList(Bot bot)
+		{
+			var idldstring = "";
+            idldstring += $"# Item Drop List Definition\n";
+			idldstring += $"Killing Floor 2: 232090 910000\n";
+			idldstring += $"Unturned: 304930 10000\n";
+			idldstring += $"Payday 2: 218620 1\n";
+			idldstring += $"Rust: 252490 10\n";
+			idldstring += $"###";
+
+            return idldstring;
+		}
 
     }
 
