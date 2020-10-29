@@ -50,7 +50,7 @@ namespace ASFItemDropManager
                             return await CheckItem(steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ",")).ConfigureAwait(false);
                         case "IDROP" when args.Length > 2:
                             return await CheckItem(steamID, bot, args[1], Utilities.GetArgsAsText(args, 2, ",")).ConfigureAwait(false);
-                        case "IDROPDEFLIST" when args.Length >= 0:
+                        case "IDROPDEFLIST" when args.Length == null:
                             return await ItemDropDefList(steamID, bot).ConfigureAwait(false);
                         default:
                             return null;
