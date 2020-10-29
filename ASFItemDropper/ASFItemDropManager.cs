@@ -1,14 +1,14 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Composition;
+using System.Linq;
 using System.Threading.Tasks;
 using ArchiSteamFarm;
 using ArchiSteamFarm.Plugins;
 using ArchiSteamFarm.Localization;
 using JetBrains.Annotations;
 using SteamKit2;
-using System.Linq;
-using System.Collections.Concurrent;
 
 namespace ASFItemDropManager
 {
@@ -25,7 +25,6 @@ namespace ASFItemDropManager
 
         public async Task<string?> OnBotCommand([NotNull] Bot bot, ulong steamID, [NotNull] string message, string[] args)
         {
-
             switch (args.Length)
             {
                 case 0:
@@ -51,8 +50,8 @@ namespace ASFItemDropManager
                             return await CheckItem(steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ",")).ConfigureAwait(false);
                         case "IDROP" when args.Length > 2:
                             return await CheckItem(steamID, bot, args[1], Utilities.GetArgsAsText(args, 2, ",")).ConfigureAwait(false);
-						case "IDROPDEFLIST" when args.Length > 1:
-						    return await ItemDropDefList(steamID, bot).ConfigureAwait(false);
+                        case "IDROPDEFLIST" :
+                            return await ItemDropDefList(steamID, bot).ConfigureAwait(false);
                         default:
                             return null;
                     }
@@ -70,8 +69,6 @@ namespace ASFItemDropManager
 
         //Responses
 
-
-
         private static async Task<string?> StartItemIdle(ulong steamID, Bot bot, string appid, string droplist)
         {
             if (!bot.HasPermission(steamID, BotConfig.EPermission.Master))
@@ -87,9 +84,11 @@ namespace ASFItemDropManager
             {
                 return bot.Commands.FormatBotResponse(string.Format(Strings.ErrorIsEmpty, nameof(ItemDropHandlers)));
             }
+
             return bot.Commands.FormatBotResponse(await Task.Run<string>(() => ItemDropHandler.itemIdleingStart(bot, appId)).ConfigureAwait(false));
 
         }
+
         private static async Task<string?> StopItemIdle(ulong steamID, Bot bot)
         {
             if (!bot.HasPermission(steamID, BotConfig.EPermission.Master))
@@ -97,24 +96,31 @@ namespace ASFItemDropManager
                 return null;
             }
 
-
             if (!ItemDropHandlers.TryGetValue(bot, out ItemDropHandler? ItemDropHandler))
             {
                 return bot.Commands.FormatBotResponse(string.Format(Strings.ErrorIsEmpty, nameof(ItemDropHandlers)));
             }
+
             return bot.Commands.FormatBotResponse(await Task.Run<string>(() => ItemDropHandler.itemIdleingStop(bot)).ConfigureAwait(false));
 
         }
-		private static async Task<string?> ItemDropDefList(ulong steamID, Bot bot)
+
+        private static async Task<string?> ItemDropDefList(ulong steamID, Bot bot)
         {
             if (!bot.HasPermission(steamID, BotConfig.EPermission.Master))
             {
                 return null;
             }
 
-			return bot.Commands.FormatBotResponse(await Task.Run<string>(() => ItemDropHandler.itemDropDefList(bot)).ConfigureAwait(false));
+            if (!ItemDropHandlers.TryGetValue(bot, out ItemDropHandler? ItemDropHandler))
+            {
+                return bot.Commands.FormatBotResponse(string.Format(Strings.ErrorIsEmpty, nameof(ItemDropHandlers)));
+            }
+
+            return bot.Commands.FormatBotResponse(await Task.Run<string>(() => ItemDropHandler.itemDropDefList(bot)).ConfigureAwait(false));
 
         }
+
         private static async Task<string?> CheckItem(ulong steamID, Bot bot, string appid, string itemdefId)
         {
             if (!bot.HasPermission(steamID, BotConfig.EPermission.Master))
@@ -134,9 +140,11 @@ namespace ASFItemDropManager
             {
                 return bot.Commands.FormatBotResponse(string.Format(Strings.ErrorIsEmpty, nameof(ItemDropHandlers)));
             }
+
             return bot.Commands.FormatBotResponse(await Task.Run<string>(() => ItemDropHandler.checkTime(appId, itemdefid, bot)).ConfigureAwait(false));
 
         }
+
         private static async Task<string?> CheckItem(ulong steamID, string botNames, string appid, string itemdefId)
         {
             HashSet<Bot>? bots = Bot.GetBots(botNames);
