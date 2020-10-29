@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,8 +9,6 @@ using ArchiSteamFarm;
 using ArchiSteamFarm.Localization;
 using SteamKit2;
 using SteamKit2.Internal;
-using System.Globalization;
-using System.Collections.Concurrent;
 using Newtonsoft.Json;
 
 namespace ASFItemDropManager
@@ -63,6 +63,7 @@ namespace ASFItemDropManager
             Client.Send(response);
             return "Start idling for " + appid;
         }
+
         internal async Task<string> checkTime(uint appid, uint itemdefid, Bot bot)
         {
             CInventory_ConsumePlaytime_Request playtimeResponse = new CInventory_ConsumePlaytime_Request { appid = appid, itemdefid = itemdefid };
@@ -117,20 +118,21 @@ namespace ASFItemDropManager
             Client.Send(response);
             return "Stop idling ";
         }
-		internal string itemDropDefList(Bot bot)
-		{
-			ClientMsgProtobuf<CMsgClientGamesPlayed> response = new ClientMsgProtobuf<CMsgClientGamesPlayed>(EMsg.ClientGamesPlayed);
-			
-			var idldstring = "";
-            idldstring += $"# Item Drop List Definition\n";
-			idldstring += $"Killing Floor 2: 232090 910000\n";
-			idldstring += $"Unturned: 304930 10000\n";
-			idldstring += $"Payday 2: 218620 1\n";
-			idldstring += $"Rust: 252490 10\n";
-			idldstring += $"###";
+
+        internal string itemDropDefList(Bot bot)
+        {
+            ClientMsgProtobuf<CMsgClientGamesPlayed> response = new ClientMsgProtobuf<CMsgClientGamesPlayed>(EMsg.ClientGamesPlayed);
+
+            var idldstring = "\n";
+            idldstring += $"## Item Drop List Definition ##\n";
+            idldstring += $"Killing Floor 2: 232090 910000\n";
+            idldstring += $"Unturned: 304930 10000\n";
+            idldstring += $"Payday 2: 218620 1\n";
+            idldstring += $"Rust: 252490 10\n";
+            idldstring += $"###";
 
             return idldstring;
-		}
+        }
 
     }
 
