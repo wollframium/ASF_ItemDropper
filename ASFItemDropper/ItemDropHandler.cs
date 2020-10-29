@@ -119,6 +119,8 @@ namespace ASFItemDropManager
         }
 		internal string itemDropDefList(Bot bot)
 		{
+			ClientMsgProtobuf<CMsgClientGamesPlayed> response = new ClientMsgProtobuf<CMsgClientGamesPlayed>(EMsg.ClientGamesPlayed);
+			
 			var idldstring = "";
             idldstring += $"# Item Drop List Definition\n";
 			idldstring += $"Killing Floor 2: 232090 910000\n";
