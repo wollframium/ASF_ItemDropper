@@ -123,16 +123,17 @@ namespace ASFItemDropManager
         {
             ClientMsgProtobuf<CMsgClientGamesPlayed> response = new ClientMsgProtobuf<CMsgClientGamesPlayed>(EMsg.ClientGamesPlayed);
 
-            private const string IDDL_File = "plugins\\ASFItemDropper\\idropdeflist.txt";
+            private const string IDDL_File = @"plugins\\ASFItemDropper\\idropdeflist.txt";
+			bool fileExists = File.Exists(IDDL_File);
 
-            if (!File.Exists(IDDL_File))
+            if (fileExists)
 			{
-                string idropdeflist_txt = "## INFO: File 'idropdeflist.txt' does not exist.";
+                string idropdeflist_txt = "\n";
+                idropdeflist_txt += System.IO.File.ReadAllText(IDDL_File);
             }
             else
             {
-                string idropdeflist_txt = "\n";
-                idropdeflist_txt += System.IO.File.ReadAllText(IDDL_File);
+                string idropdeflist_txt = "## INFO: File 'idropdeflist.txt' does not exist.";
             }
 
             return idropdeflist_txt;
