@@ -123,15 +123,10 @@ namespace ASFItemDropManager
         {
             ClientMsgProtobuf<CMsgClientGamesPlayed> response = new ClientMsgProtobuf<CMsgClientGamesPlayed>(EMsg.ClientGamesPlayed);
 
-            var idldstring = "\n";
-            idldstring += $"## Item Drop List Definition ##\n";
-            idldstring += $"Killing Floor 2: 232090 910000\n";
-            idldstring += $"Unturned: 304930 10000\n";
-            idldstring += $"Payday 2: 218620 1\n";
-            idldstring += $"Rust: 252490 10\n";
-            idldstring += $"###";
+            string idropdeflist_txt = "\n";
+			idropdeflist_txt += System.IO.File.ReadAllText(@"idropdeflist.txt");
 
-            return idldstring;
+            return idropdeflist_txt;
         }
 
     }
