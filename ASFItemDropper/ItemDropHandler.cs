@@ -119,7 +119,7 @@ namespace ASFItemDropManager
             return "Stop idling ";
         }
 
-        internal string itemDropDefList(Bot bot)
+        internal async Task<string> itemDropDefList(Bot bot)
         {
             ClientMsgProtobuf<CMsgClientGamesPlayed> response = new ClientMsgProtobuf<CMsgClientGamesPlayed>(EMsg.ClientGamesPlayed);
 
