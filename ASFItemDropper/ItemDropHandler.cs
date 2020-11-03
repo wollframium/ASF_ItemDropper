@@ -119,16 +119,18 @@ namespace ASFItemDropManager
             return "Stop idling ";
         }
 
-        internal async Task<string> itemDropDefList(Bot bot)
+        internal string itemDropDefList(Bot bot)
         {
             ClientMsgProtobuf<CMsgClientGamesPlayed> response = new ClientMsgProtobuf<CMsgClientGamesPlayed>(EMsg.ClientGamesPlayed);
 
             string IDDL_File = @"plugins\\ASFItemDropper\\idropdeflist.txt";
-			bool fileExists = File.Exists(IDDL_File);
-            string idropdeflist_txt = "\n";
+            string idropdeflist_txt = "";
+
+            bool fileExists = File.Exists(IDDL_File);
 
             if (fileExists)
-			{
+            {
+                idropdeflist_txt = "\n";
                 idropdeflist_txt += System.IO.File.ReadAllText(IDDL_File);
             }
             else
