@@ -20,7 +20,7 @@ namespace ASFItemDropManager
         public string Name => "ASF Item Dropper";
         public Version Version => typeof(ASFItemDropManager).Assembly.GetName().Version ?? new Version("0");
 
-        public void OnLoaded() => ASF.ArchiLogger.LogGenericInfo("ASF Item Drop Plugin by webben");
+        public void OnLoaded() => ASF.ArchiLogger.LogGenericInfo("ASF Item Drop Plugin by webben | fork by Sniper677");
 
 
         public async Task<string?> OnBotCommand([NotNull] Bot bot, ulong steamID, [NotNull] string message, string[] args)
@@ -34,7 +34,8 @@ namespace ASFItemDropManager
                 case 1:
                     switch (args[0].ToUpperInvariant())
                     {
-
+                        //case "IDROPDEFLIST":
+                        //    return ItemDropDefList(steamID);
                         default:
                             return null;
                     }
@@ -71,7 +72,7 @@ namespace ASFItemDropManager
 
         private static async Task<string?> StartItemIdle(ulong steamID, Bot bot, string appid, string droplist)
         {
-            if (!bot.HasPermission(steamID, BotConfig.EPermission.Master))
+            if (!bot.HasAccess(steamID, BotConfig.EAccess.Master))
             {
                 return null;
             }
@@ -91,7 +92,7 @@ namespace ASFItemDropManager
 
         private static async Task<string?> StopItemIdle(ulong steamID, Bot bot)
         {
-            if (!bot.HasPermission(steamID, BotConfig.EPermission.Master))
+            if (!bot.HasAccess(steamID, BotConfig.EAccess.Master))
             {
                 return null;
             }
@@ -107,7 +108,7 @@ namespace ASFItemDropManager
 
         private static async Task<string?> ItemDropDefList(ulong steamID, Bot bot)
         {
-            if (!bot.HasPermission(steamID, BotConfig.EPermission.Master))
+            if (!bot.HasAccess(steamID, BotConfig.EAccess.Master))
             {
                 return null;
             }
@@ -123,7 +124,7 @@ namespace ASFItemDropManager
 
         private static async Task<string?> CheckItem(ulong steamID, Bot bot, string appid, string itemdefId)
         {
-            if (!bot.HasPermission(steamID, BotConfig.EPermission.Master))
+            if (!bot.HasAccess(steamID, BotConfig.EAccess.Master))
             {
                 return null;
             }

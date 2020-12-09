@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Authors>Webben</Authors>
-    <AssemblyVersion>0.1.0.0</AssemblyVersion>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <Authors>Sniper677</Authors>
+    <AssemblyVersion>0.2.0.0</AssemblyVersion>
+    <TargetFrameworks>net5.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
