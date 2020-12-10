@@ -13,35 +13,35 @@ namespace QuickType
     public partial class ItemList
     {
         [JsonProperty("accountid")]
-        public string Accountid { get; set; }
+        public string Accountid { get; set; } = null! ;
 
         [JsonProperty("itemid")]
-        public string Itemid { get; set; }
+        public string Itemid { get; set; } = null! ;
 
         [JsonProperty("quantity")]
-        public long Quantity { get; set; }
+        public long Quantity { get; set; } = null! ;
 
         [JsonProperty("originalitemid")]
-        public string Originalitemid { get; set; }
+        public string Originalitemid { get; set; } = null! ;
 
         [JsonProperty("itemdefid")]
         [JsonConverter(typeof(ParseStringConverter))]
-        public long Itemdefid { get; set; }
+        public long Itemdefid { get; set; } = null! ;
 
         [JsonProperty("appid")]
-        public long Appid { get; set; }
+        public long Appid { get; set; } = null! ;
 
         [JsonProperty("acquired")]
-        public string Acquired { get; set; }
+        public string Acquired { get; set; } = null! ;
 
         [JsonProperty("state")]
-        public string State { get; set; }
+        public string State { get; set; } = null! ;
 
         [JsonProperty("origin")]
-        public string Origin { get; set; }
+        public string Origin { get; set; } = null! ;
 
         [JsonProperty("state_changed_timestamp")]
-        public string StateChangedTimestamp { get; set; }
+        public string StateChangedTimestamp { get; set; } = null! ;
     }
 
     public partial class ItemList
