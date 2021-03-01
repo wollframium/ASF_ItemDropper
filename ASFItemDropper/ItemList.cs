@@ -13,16 +13,16 @@ namespace QuickType
     public partial class ItemList
     {
         [JsonProperty("accountid")]
-        public string Accountid { get; set; }
+        public string? Accountid { get; set; }
 
         [JsonProperty("itemid")]
-        public string Itemid { get; set; }
+        public string? Itemid { get; set; }
 
         [JsonProperty("quantity")]
         public long Quantity { get; set; }
 
         [JsonProperty("originalitemid")]
-        public string Originalitemid { get; set; }
+        public string? Originalitemid { get; set; }
 
         [JsonProperty("itemdefid")]
         [JsonConverter(typeof(ParseStringConverter))]
@@ -32,16 +32,16 @@ namespace QuickType
         public long Appid { get; set; }
 
         [JsonProperty("acquired")]
-        public string Acquired { get; set; }
+        public string? Acquired { get; set; }
 
         [JsonProperty("state")]
-        public string State { get; set; }
+        public string? State { get; set; }
 
         [JsonProperty("origin")]
-        public string Origin { get; set; }
+        public string? Origin { get; set; }
 
         [JsonProperty("state_changed_timestamp")]
-        public string StateChangedTimestamp { get; set; }
+        public string? StateChangedTimestamp { get; set; }
     }
 
     public partial class ItemList
@@ -70,7 +70,7 @@ namespace QuickType
     {
         public override bool CanConvert(Type t) => t == typeof(long) || t == typeof(long?);
 
-        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
+        public override object? ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.Null) return null;
             var value = serializer.Deserialize<string>(reader);
