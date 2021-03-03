@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASF-ItemDropper", "ASFItemDropper\ASFItemDropper.csproj", "{D0352FDB-487E-488A-9B07-2D4F19425A39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASFItemDropper", "ASFItemDropper\ASFItemDropper.csproj", "{D0352FDB-487E-488A-9B07-2D4F19425A39}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchiSteamFarm", "ArchiSteamFarm\ArchiSteamFarm\ArchiSteamFarm.csproj", "{930573F9-3DA0-41E8-8E4E-C0476BA8F99C}"
 EndProject
@@ -27,5 +27,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {70D1C70D-BB39-4CB7-A050-F26B57CE3721}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		version = 0.3
 	EndGlobalSection
 EndGlobal

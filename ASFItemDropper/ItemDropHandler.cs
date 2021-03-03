@@ -1,23 +1,18 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using ArchiSteamFarm;
-using ArchiSteamFarm.Localization;
 using SteamKit2;
 using SteamKit2.Internal;
-using Newtonsoft.Json;
 
 namespace ASFItemDropManager
 {
 
     public sealed class ItemDropHandler : ClientMsgHandler
     {
-        private SteamUnifiedMessages.UnifiedService<IInventory> _inventoryService;
-        private SteamUnifiedMessages.UnifiedService<IPlayer> _PlayerService;
+        private SteamUnifiedMessages.UnifiedService<IInventory>? _inventoryService;
+        private SteamUnifiedMessages.UnifiedService<IPlayer>? _PlayerService;
 
         ConcurrentDictionary<ulong, StoredResponse> Responses = new ConcurrentDictionary<ulong, StoredResponse>();
 
@@ -70,6 +65,7 @@ namespace ASFItemDropManager
             CPlayer_GetOwnedGames_Request gamesOwnedRequest = new CPlayer_GetOwnedGames_Request { steamid = bot.SteamID };
 
             var steamUnifiedMessages = Client.GetHandler<SteamUnifiedMessages>();
+            if (steamUnifiedMessages == null) return "SteamUnifiedMessages Error";
 
             _inventoryService = steamUnifiedMessages.CreateService<IInventory>();
             _PlayerService = steamUnifiedMessages.CreateService<IPlayer>();
@@ -81,17 +77,22 @@ namespace ASFItemDropManager
             var resultGamesPlayed = consumePlaytimeResponse.GetDeserializedResponse<CPlayer_GetOwnedGames_Response>();
             var resultFilteredGameById = resultGamesPlayed.games.Find(game => game.appid == appid);
             var appidPlaytimeForever = 0;
+
+
+            if (resultGamesPlayed == null) bot.ArchiLogger.LogNullError("resultGamesPlayed");
+            if (resultFilteredGameById == null) bot.ArchiLogger.LogNullError("resultFilteredGameById ");
             if (resultGamesPlayed != null && resultFilteredGameById != null)
             {
                 appidPlaytimeForever = resultFilteredGameById.playtime_forever;
             }
 
+            bot.ArchiLogger.LogGenericDebug(message: consumePlaytime.item_json);
 
+            // proceed only when the player has played the request game id
             if (consumePlaytime.item_json != "[]")
             {
                 try
                 {
-                    Console.WriteLine(consumePlaytime.item_json);
                     var summstring = "";
 
                     foreach (var item in QuickType.ItemList.FromJson(consumePlaytime.item_json))
@@ -102,11 +103,16 @@ namespace ASFItemDropManager
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    bot.ArchiLogger.LogGenericError(message: e.Message);
+                    return "Error while parse consumePlaytime";
                 }
 
             }
-            return $"No item drop for game {appid} with playtime {appidPlaytimeForever}.";
+            else
+            {
+                bot.ArchiLogger.LogGenericInfo($"No playtime for {bot.BotName} and {appid}");
+                return $"No item drop for game {appid} with playtime {appidPlaytimeForever}.";
+            }
         }
         internal string itemIdleingStop(Bot bot)
         {
