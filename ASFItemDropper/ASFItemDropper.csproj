@@ -6,7 +6,7 @@
     <TargetFrameworks>net5.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
-    <ReleaseVersion>0.3</ReleaseVersion>
+    <ReleaseVersion>0.3.1</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>

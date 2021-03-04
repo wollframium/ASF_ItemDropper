@@ -61,41 +61,49 @@ namespace ASFItemDropManager
 
         internal async Task<string> checkTime(uint appid, uint itemdefid, Bot bot)
         {
-            CInventory_ConsumePlaytime_Request playtimeResponse = new CInventory_ConsumePlaytime_Request { appid = appid, itemdefid = itemdefid };
-            CPlayer_GetOwnedGames_Request gamesOwnedRequest = new CPlayer_GetOwnedGames_Request { steamid = bot.SteamID };
 
             var steamUnifiedMessages = Client.GetHandler<SteamUnifiedMessages>();
-            if (steamUnifiedMessages == null) return "SteamUnifiedMessages Error";
+            if (steamUnifiedMessages == null)
+            {
+                bot.ArchiLogger.LogNullError(nameof(steamUnifiedMessages));
+                return "SteamUnifiedMessages Error";
+            }
 
+            CInventory_ConsumePlaytime_Request playtimeRequest = new CInventory_ConsumePlaytime_Request { appid = appid, itemdefid = itemdefid };
             _inventoryService = steamUnifiedMessages.CreateService<IInventory>();
-            _PlayerService = steamUnifiedMessages.CreateService<IPlayer>();
-
-            var consumePlaytimeResponse = await _inventoryService.SendMessage(x => x.ConsumePlaytime(playtimeResponse));
-            var consumePlaytime = consumePlaytimeResponse.GetDeserializedResponse<CInventory_Response>();
-
-            var ownedReponse = await _PlayerService.SendMessage(x => x.GetOwnedGames(gamesOwnedRequest));
-            var resultGamesPlayed = consumePlaytimeResponse.GetDeserializedResponse<CPlayer_GetOwnedGames_Response>();
-            var resultFilteredGameById = resultGamesPlayed.games.Find(game => game.appid == appid);
-            var appidPlaytimeForever = 0;
+            var playtimeResponse = await _inventoryService.SendMessage(x => x.ConsumePlaytime(playtimeRequest));
+            var resultGamesPlayed = playtimeResponse.GetDeserializedResponse<CInventory_Response>();
 
 
+            if (resultGamesPlayed.item_json == null) bot.ArchiLogger.LogGenericWarning(message: $"{resultGamesPlayed.item_json}");
             if (resultGamesPlayed == null) bot.ArchiLogger.LogNullError("resultGamesPlayed");
+
+
+            CPlayer_GetOwnedGames_Request gamesOwnedRequest = new CPlayer_GetOwnedGames_Request { steamid = bot.SteamID,  include_appinfo = true, include_free_sub= true, include_played_free_games=true };
+            _PlayerService = steamUnifiedMessages.CreateService<IPlayer>();
+            var ownedReponse = await _PlayerService.SendMessage(x => x.GetOwnedGames(gamesOwnedRequest));
+            var consumePlaytime = ownedReponse.GetDeserializedResponse<CPlayer_GetOwnedGames_Response>();
+            consumePlaytime.games.ForEach(action => bot.ArchiLogger.LogGenericInfo(message: $"{action.appid} - {action.has_community_visible_stats} - {action.name} - {action.playtime_forever}"));
+            var resultFilteredGameById = consumePlaytime.games.Find(game => game.appid ==  ((int)appid) );
+
+            if (consumePlaytime.games == null) bot.ArchiLogger.LogNullError(nameof(consumePlaytime.games));
             if (resultFilteredGameById == null) bot.ArchiLogger.LogNullError("resultFilteredGameById ");
+
+            var appidPlaytimeForever = 0;
             if (resultGamesPlayed != null && resultFilteredGameById != null)
             {
+                bot.ArchiLogger.LogGenericDebug(message: $"Playtime for {resultFilteredGameById.name} is: {resultFilteredGameById.playtime_forever}");
                 appidPlaytimeForever = resultFilteredGameById.playtime_forever;
             }
 
-            bot.ArchiLogger.LogGenericDebug(message: consumePlaytime.item_json);
-
             // proceed only when the player has played the request game id
-            if (consumePlaytime.item_json != "[]")
+            if (resultGamesPlayed != null && resultGamesPlayed.item_json != "[]")
             {
                 try
                 {
                     var summstring = "";
 
-                    foreach (var item in QuickType.ItemList.FromJson(consumePlaytime.item_json))
+                    foreach (var item in QuickType.ItemList.FromJson(resultGamesPlayed.item_json))
                     {
                         summstring += $"Item drop @ {item.StateChangedTimestamp} => i.ID: {appid}_{item.Itemid}, i.Def: {item.Itemdefid} (playtime: {appidPlaytimeForever})";
                     }
@@ -110,8 +118,8 @@ namespace ASFItemDropManager
             }
             else
             {
-                bot.ArchiLogger.LogGenericInfo($"No playtime for {bot.BotName} and {appid}");
-                return $"No item drop for game {appid} with playtime {appidPlaytimeForever}.";
+                
+                return $"No item drop for game {resultFilteredGameById.name} with playtime {appidPlaytimeForever}.";
             }
         }
         internal string itemIdleingStop(Bot bot)
