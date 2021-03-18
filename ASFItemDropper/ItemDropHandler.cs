@@ -137,7 +137,7 @@ namespace ASFItemDropManager
             else
             {
 
-                if (logoutput)
+                if (longoutput)
                 {
                     return $"No item drop for game '{resultFilteredGameById.name}' with playtime {appidPlaytimeForever}m.";
                 }
