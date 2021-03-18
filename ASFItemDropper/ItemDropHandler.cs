@@ -59,7 +59,18 @@ namespace ASFItemDropManager
             return "Start idling for " + appid;
         }
 
-        internal async Task<string> checkTime(uint appid, uint itemdefid, Bot bot)
+        internal string itemIdleingStop(Bot bot)
+        {
+            ClientMsgProtobuf<CMsgClientGamesPlayed> response = new ClientMsgProtobuf<CMsgClientGamesPlayed>(EMsg.ClientGamesPlayed);
+            {
+                response.Body.games_played.Add(new CMsgClientGamesPlayed.GamePlayed { game_id = 0 });
+            }
+
+            Client.Send(response);
+            return "Stop idling ";
+        }
+
+        internal async Task<string> checkTime(uint appid, uint itemdefid, Bot bot, bool longoutput)
         {
 
             var steamUnifiedMessages = Client.GetHandler<SteamUnifiedMessages>();
@@ -105,7 +116,14 @@ namespace ASFItemDropManager
 
                     foreach (var item in QuickType.ItemList.FromJson(resultGamesPlayed.item_json))
                     {
-                        summstring += $"Item drop @ {item.StateChangedTimestamp} => i.ID: {appid}_{item.Itemid}, i.Def: {item.Itemdefid} (playtime: {appidPlaytimeForever})";
+                        if (longoutput)
+                        {
+                            summstring += $"Item drop @{item.StateChangedTimestamp} => i.ID: {appid}_{item.Itemid}, i.Def: {item.Itemdefid} (a.PT: {appidPlaytimeForever}m)";
+                        }
+                        else
+                        {
+                            summstring += $"Item drop @{item.StateChangedTimestamp}";
+                        }
                     }
                     return summstring;
                 }
@@ -118,19 +136,16 @@ namespace ASFItemDropManager
             }
             else
             {
-                
-                return $"No item drop for game {resultFilteredGameById.name} with playtime {appidPlaytimeForever}.";
-            }
-        }
-        internal string itemIdleingStop(Bot bot)
-        {
-            ClientMsgProtobuf<CMsgClientGamesPlayed> response = new ClientMsgProtobuf<CMsgClientGamesPlayed>(EMsg.ClientGamesPlayed);
-            {
-                response.Body.games_played.Add(new CMsgClientGamesPlayed.GamePlayed { game_id = 0 });
-            }
 
-            Client.Send(response);
-            return "Stop idling ";
+                if (longoutput)
+                {
+                    return $"No item drop for game '{resultFilteredGameById.name}' with playtime {appidPlaytimeForever}m.";
+                }
+                else
+                {
+                    return $"No item drop.";
+                }
+            }
         }
 
         internal string itemDropDefList(Bot bot)
