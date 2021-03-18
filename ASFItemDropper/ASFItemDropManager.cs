@@ -57,12 +57,20 @@ namespace ASFItemDropManager
                 // istop bot1,bot2,bot3
                 case "ISTOP" when args.Length == 2:
                     return await StopItemIdle(steamID, args[1]).ConfigureAwait(false);
+
                 // idrop bot1,bot2,bot appid1 item1
                 case "IDROP" when args.Length == 4:
-                    return await CheckItem(steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ",")).ConfigureAwait(false);
+                    return await CheckItem(steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ","), true).ConfigureAwait(false);
                 // idrop appid1 item1
                 case "IDROP" when args.Length == 3:
-                    return await CheckItem(steamID, bot, args[1], Utilities.GetArgsAsText(args, 2, ",")).ConfigureAwait(false);
+                    return await CheckItem(steamID, bot, args[1], Utilities.GetArgsAsText(args, 2, ","), true).ConfigureAwait(false);
+
+                // idrops bot1,bot2,bot appid1 item1
+                case "IDROPS" when args.Length == 4:
+                    return await CheckItem(steamID, args[1], args[2], Utilities.GetArgsAsText(args, 3, ","), false).ConfigureAwait(false);
+                // idrops appid1 item1
+                case "IDROPS" when args.Length == 3:
+                    return await CheckItem(steamID, bot, args[1], Utilities.GetArgsAsText(args, 2, ","), false).ConfigureAwait(false);
 
                 // idropdeflist
                 case "IDROPDEFLIST" when args.Length == 1 :
@@ -185,7 +193,7 @@ namespace ASFItemDropManager
         }
 
 
-        private static async Task<string?> CheckItem(ulong steamID, Bot bot, string appid, string itemdefId)
+        private static async Task<string?> CheckItem(ulong steamID, Bot bot, string appid, string itemdefId, bool longoutput)
         {
             if (!bot.HasAccess(steamID, BotConfig.EAccess.Master))
             {
@@ -205,11 +213,11 @@ namespace ASFItemDropManager
                 return bot.Commands.FormatBotResponse(string.Format(Strings.ErrorIsEmpty, nameof(ItemDropHandlers)));
             }
 
-            return bot.Commands.FormatBotResponse(await Task.Run<string>(() => ItemDropHandler.checkTime(appId, itemdefid, bot)).ConfigureAwait(false));
+            return bot.Commands.FormatBotResponse(await Task.Run<string>(() => ItemDropHandler.checkTime(appId, itemdefid, bot, longoutput)).ConfigureAwait(false));
 
         }
 
-        private static async Task<string?> CheckItem(ulong steamID, string botNames, string appid, string itemdefId)
+        private static async Task<string?> CheckItem(ulong steamID, string botNames, string appid, string itemdefId, bool longoutput)
         {
             HashSet<Bot>? bots = Bot.GetBots(botNames);
 
@@ -218,7 +226,7 @@ namespace ASFItemDropManager
                 return Commands.FormatStaticResponse(string.Format(Strings.BotNotFound, botNames));
             }
 
-            IList<string?> results = await Utilities.InParallel(bots.Select(bot => CheckItem(steamID, bot, appid, itemdefId))).ConfigureAwait(false);
+            IList<string?> results = await Utilities.InParallel(bots.Select(bot => CheckItem(steamID, bot, appid, itemdefId, longoutput))).ConfigureAwait(false);
 
             List<string?> responses = new List<string?>(results.Where(result => !string.IsNullOrEmpty(result)));
             
