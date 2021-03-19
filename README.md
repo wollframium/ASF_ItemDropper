@@ -31,3 +31,11 @@ Triggers an item drop on single or on multiple bots.
 
 - `idrop bot1 987654 12345` triggers drop on the bot, where the command was sent to
 - `idrop 987654 12345` triggers drop on the bot, where the command was sent to
+
+### `idrops <bots> <appid> <drop definition list>`
+
+Same syntax and same function as **IDROP** command only less output for smaller displays like mobile phones or tablets.
+
+### `idropdeflist`
+
+Command to read and print content of file **idropdeflist.txt**, which must be located in same directory as the plugin DLL itself.
