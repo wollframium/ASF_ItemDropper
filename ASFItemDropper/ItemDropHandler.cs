@@ -148,6 +148,38 @@ namespace ASFItemDropManager
             }
         }
 
+        internal async Task<string> checkPlaytime(uint appid, Bot bot)
+        {
+
+            var steamUnifiedMessages = Client.GetHandler<SteamUnifiedMessages>();
+            if (steamUnifiedMessages == null)
+            {
+                bot.ArchiLogger.LogNullError(nameof(steamUnifiedMessages));
+                return "SteamUnifiedMessages Error";
+            }
+
+            CPlayer_GetOwnedGames_Request gamesOwnedRequest = new CPlayer_GetOwnedGames_Request { steamid = bot.SteamID, include_appinfo = true, include_free_sub= true, include_played_free_games=true };
+            _PlayerService = steamUnifiedMessages.CreateService<IPlayer>();
+            var ownedReponse = await _PlayerService.SendMessage(x => x.GetOwnedGames(gamesOwnedRequest));
+            var consumePlaytime = ownedReponse.GetDeserializedResponse<CPlayer_GetOwnedGames_Response>();
+            consumePlaytime.games.ForEach(action => bot.ArchiLogger.LogGenericInfo(message: $"{action.appid} - {action.has_community_visible_stats} - {action.name} - {action.playtime_forever}"));
+            var resultFilteredGameById = consumePlaytime.games.Find(game => game.appid == ((int)appid) );
+
+            if (consumePlaytime.games == null) bot.ArchiLogger.LogNullError(nameof(consumePlaytime.games));
+            if (resultFilteredGameById == null) bot.ArchiLogger.LogNullError("resultFilteredGameById");
+
+            uint appidPlaytimeForever = 0;
+            bot.ArchiLogger.LogGenericDebug(message: $"Playtime for {resultFilteredGameById.name} is: {resultFilteredGameById.playtime_forever}");
+            appidPlaytimeForever = Convert.ToUInt32(resultFilteredGameById.playtime_forever);
+            uint appidPlaytimeHours = appidPlaytimeForever / 60;
+            byte appidPlaytimeMinutes = Convert.ToByte(appidPlaytimeForever % 60);
+
+            var summstring = "";
+            summstring += $"Playtime for game '{resultFilteredGameById.name}' is {appidPlaytimeForever}m = {appidPlaytimeHours}h {appidPlaytimeMinutes}m";
+
+            return summstring;
+        }
+
         internal string itemDropDefList(Bot bot)
         {
             ClientMsgProtobuf<CMsgClientGamesPlayed> response = new ClientMsgProtobuf<CMsgClientGamesPlayed>(EMsg.ClientGamesPlayed);

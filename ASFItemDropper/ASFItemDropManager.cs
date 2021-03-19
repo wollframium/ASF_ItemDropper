@@ -72,6 +72,13 @@ namespace ASFItemDropManager
                 case "IDROPS" when args.Length == 3:
                     return await CheckItem(steamID, bot, args[1], Utilities.GetArgsAsText(args, 2, ","), false).ConfigureAwait(false);
 
+                // idroppt bot1,bot2,bot appid1
+                case "IDROPPT" when args.Length == 3:
+                    return await CheckPlaytime(steamID, args[1], args[2]).ConfigureAwait(false);
+                // idroppt appid1
+                case "IDROPPT" when args.Length == 2:
+                    return await CheckPlaytime(steamID, bot, args[1]).ConfigureAwait(false);
+
                 // idropdeflist
                 case "IDROPDEFLIST" when args.Length == 1 :
                     return await ItemDropDefList(steamID, bot).ConfigureAwait(false);
@@ -230,6 +237,43 @@ namespace ASFItemDropManager
 
             List<string?> responses = new List<string?>(results.Where(result => !string.IsNullOrEmpty(result)));
             
+            return responses.Count > 0 ? string.Join(Environment.NewLine, responses) : "No Results";
+
+        }
+
+        private static async Task<string?> CheckPlaytime(ulong steamID, Bot bot, string appid)
+        {
+            if (!bot.HasAccess(steamID, BotConfig.EAccess.Master))
+            {
+                bot.ArchiLogger.LogGenericError("Bot has no access");
+                return null;
+            }
+            if (!uint.TryParse(appid, out uint appId))
+            {
+                return bot.Commands.FormatBotResponse(string.Format(Strings.ErrorIsInvalid, nameof(appId)));
+            }
+            if (!ItemDropHandlers.TryGetValue(bot, out ItemDropHandler? ItemDropHandler))
+            {
+                return bot.Commands.FormatBotResponse(string.Format(Strings.ErrorIsEmpty, nameof(ItemDropHandlers)));
+            }
+
+            return bot.Commands.FormatBotResponse(await Task.Run<string>(() => ItemDropHandler.checkPlaytime(appId, bot)).ConfigureAwait(false));
+
+        }
+
+        private static async Task<string?> CheckPlaytime(ulong steamID, string botNames, string appid)
+        {
+            HashSet<Bot>? bots = Bot.GetBots(botNames);
+
+            if ((bots == null) || (bots.Count == 0))
+            {
+                return Commands.FormatStaticResponse(string.Format(Strings.BotNotFound, botNames));
+            }
+
+            IList<string?> results = await Utilities.InParallel(bots.Select(bot => CheckPlaytime(steamID, bot, appid))).ConfigureAwait(false);
+
+            List<string?> responses = new List<string?>(results.Where(result => !string.IsNullOrEmpty(result)));
+
             return responses.Count > 0 ? string.Join(Environment.NewLine, responses) : "No Results";
 
         }
