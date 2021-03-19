@@ -28,13 +28,22 @@ Triggers an item drop on single or on multiple bots.
 
 - `idrop bot1,bot2,bot3 987654 12345` triggers drops on the given bot names
 - `idrop bot1..bot3 987654 12345` triggers drops on the given bot names
-
-- `idrop bot1 987654 12345` triggers drop on the bot, where the command was sent to
+- `idrop bot1 987654 12345` triggers drop on the given single bot
 - `idrop 987654 12345` triggers drop on the bot, where the command was sent to
 
 ### `idrops <bots> <appid> <drop definition list>`
 
 Same syntax and same function as **IDROP** command only less output for smaller displays like mobile phones or tablets.
+
+### `idroppt <bots> <appid>`
+
+Displays the overall playtime of a game on single or on multiple bots.
+
+
+- `idroppt bot1,bot2,bot3 987654` display playtime of the given bot names
+- `idroppt bot1..bot3 987654` display playtime of the given bot names
+- `idroppt bot1 987654` display playtime of a single bot
+- `idroppt 987654` display playtime of the bot, where the command was sent to
 
 ### `idropdeflist`
 
