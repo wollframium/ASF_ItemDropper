@@ -37,14 +37,14 @@ jobs:
         run: dotnet restore
 
       - name: Build ASF_ItemDropper
-        run: dotnet build -c "${{ env.CONFIGURATION }}" -p:UseAppHost=false --nologo
+        run: dotnet build -c "${{ env.CONFIGURATION }}" --no-restore --nologo
 
         #- name: Run ASF_ItemDropper.Tests
         #run: dotnet test ASF_ItemDropper.Tests -c "${{ env.CONFIGURATION }}" -p:UseAppHost=false --nologo
 
       - name: Publish ASF_ItemDropper for .NET Core
         run: |
-          dotnet publish -c c "${{ env.CONFIGURATION }}" -f "${{ env.NET_CORE_VERSION }}" -o "out/generic" -p:LinkDuringPublish=false -p:UseAppHost=false --nologo
+          dotnet publish -c c "${{ env.CONFIGURATION }}" -f "${{ env.NET_CORE_VERSION }}" -o "out/generic" -p:LinkDuringPublish=false --nologo
 
       - name: Upload ASF_ItemDropper
         uses: actions/upload-artifact@v2
