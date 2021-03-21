@@ -1,39 +1,62 @@
-name: .NET Core
+name: ASF_ItemDropper-CI
 
-on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
+on: [push, pull_request]
+
+env:
+  CONFIGURATION: Release
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_NOLOGO: 1
+  DOTNET_SDK_VERSION: 5.0.x
+  NET_CORE_VERSION: net5.0
+  NET_FRAMEWORK_VERSION: net48
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  main:
+    strategy:
+      matrix:
+        #os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
+ 
+    runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Repo Checkout
+      - name: Checkout code
         uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: recursive
+
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100
+          dotnet-version: ${{ env.DOTNET_SDK_VERSION }}
+
+      - name: Verify .NET Core
+        run: dotnet --info 
+
       - name: Install dependencies
         run: dotnet restore
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
-      - name: Publish
+
+      - name: Build ASF_ItemDropper
+        run: dotnet build -c "${{ env.CONFIGURATION }}" -p:UseAppHost=false --nologo
+
+      - name: Run ASF_ItemDropper.Tests
+        run: dotnet test ASF_ItemDropper.Tests -c "${{ env.CONFIGURATION }}" -p:UseAppHost=false --nologo
+
+      - name: Publish ASF_ItemDropper for .NET Core
         run: |
-          dotnet publish -c "Release" -f "net5.0" -o "out/generic" "/p:LinkDuringPublish=false"
-          tar c out/generic/ASFItemDropper.* > ASFItemDropper.tar
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v2.1.4
+          dotnet publish -c c "${{ env.CONFIGURATION }}" -f "${{ env.NET_CORE_VERSION }}" -o "out/generic" -p:LinkDuringPublish=false -p:UseAppHost=false --nologo
+
+      - name: Upload ASF_ItemDropper
+        uses: actions/upload-artifact@v2
         with:
           # Artifact name
-          name: ASF-ItemDropper.zip
-          # Destination path
-          path: out/generic/ASFItemDropper*
+          name: ASF_ItemDropper
+          # Destination path(s)
+          path: |
+            out/generic/
+            idropdeflist.txt
+          if-no-files-found: warn # 'error', 'warn' or 'ignore' are also available, defaults to `warn`
+
       # - name: Create Release
       #   id: create_release
       #   uses: actions/create-release@v1
