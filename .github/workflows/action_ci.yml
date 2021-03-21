@@ -44,7 +44,7 @@ jobs:
 
       - name: Publish ASF_ItemDropper for .NET Core
         run: |
-          dotnet publish -c c "${{ env.CONFIGURATION }}" -f "${{ env.NET_CORE_VERSION }}" -o "out/generic" -p:LinkDuringPublish=false --nologo
+          dotnet publish -c "${{ env.CONFIGURATION }}" -f "${{ env.NET_CORE_VERSION }}" -o "out/generic" -p:LinkDuringPublish=false --nologo
 
       - name: Upload ASF_ItemDropper
         uses: actions/upload-artifact@v2
