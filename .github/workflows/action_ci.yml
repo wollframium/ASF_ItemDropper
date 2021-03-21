@@ -39,8 +39,8 @@ jobs:
       - name: Build ASF_ItemDropper
         run: dotnet build -c "${{ env.CONFIGURATION }}" -p:UseAppHost=false --nologo
 
-      - name: Run ASF_ItemDropper.Tests
-        run: dotnet test ASF_ItemDropper.Tests -c "${{ env.CONFIGURATION }}" -p:UseAppHost=false --nologo
+        #- name: Run ASF_ItemDropper.Tests
+        #run: dotnet test ASF_ItemDropper.Tests -c "${{ env.CONFIGURATION }}" -p:UseAppHost=false --nologo
 
       - name: Publish ASF_ItemDropper for .NET Core
         run: |
