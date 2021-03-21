@@ -53,7 +53,7 @@ jobs:
           name: ASF_ItemDropper
           # Destination path(s)
           path: |
-            out/generic/
+            out/generic/ASFItemDropper.*
             idropdeflist.txt
           if-no-files-found: warn # 'error', 'warn' or 'ignore' are also available, defaults to `warn`
 
