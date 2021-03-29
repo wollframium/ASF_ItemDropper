@@ -46,9 +46,9 @@ jobs:
         run: |
           dotnet publish -c "${{ env.CONFIGURATION }}" -f "${{ env.NET_CORE_VERSION }}" -o "out/generic" -p:LinkDuringPublish=false --nologo
 
-      - name: Publish ASF_ItemDropper for .NET Framework
-        run: |
-          dotnet publish -c "${{ env.CONFIGURATION }}" -f "${{ env.NET_FRAMEWORK_VERSION }}" -o "out/generic-netf" -p:LinkDuringPublish=false --nologo
+      # - name: Publish ASF_ItemDropper for .NET Framework
+      #   run: |
+      #     dotnet publish -c "${{ env.CONFIGURATION }}" -f "${{ env.NET_FRAMEWORK_VERSION }}" -o "out/generic-netf" -p:LinkDuringPublish=false --nologo
 
       - name: Show build environment
         shell: sh
@@ -69,16 +69,16 @@ jobs:
             idropdeflist.txt
           if-no-files-found: warn # 'error', 'warn' or 'ignore' are also available, defaults to `warn`
 
-      - name: Upload ASF_ItemDropper generic-netf artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          # Artifact name
-          name: ${{ github.event.repository.name }}-generic-netf
-          # Destination path(s)
-          path: |
-            out/generic-netf/ASFItemDropper.*
-            idropdeflist.txt
-          if-no-files-found: warn # 'error', 'warn' or 'ignore' are also available, defaults to `warn`
+      # - name: Upload ASF_ItemDropper generic-netf artifacts
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     # Artifact name
+      #     name: ${{ github.event.repository.name }}-generic-netf
+      #     # Destination path(s)
+      #     path: |
+      #       out/generic-netf/ASFItemDropper.*
+      #       idropdeflist.txt
+      #     if-no-files-found: warn # 'error', 'warn' or 'ignore' are also available, defaults to `warn`
 
       # - name: Create Release
       #   id: create_release
