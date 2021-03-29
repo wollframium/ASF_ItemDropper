@@ -51,12 +51,18 @@ jobs:
       #     dotnet publish -c "${{ env.CONFIGURATION }}" -f "${{ env.NET_FRAMEWORK_VERSION }}" -o "out/generic-netf" -p:LinkDuringPublish=false --nologo
 
       - name: Show build environment
-        shell: sh
+        shell: bash
         run: |
           set -eu
 
           pwd
           ls -la
+
+      - name: Copy additinal files to ASF_ItemDropper generic artifacts
+        shell: bash
+        run: |
+          set -eu
+          cp ASFItemDropper/idropdeflist.txt out/generic/
 
       - name: Upload ASF_ItemDropper generic artifacts
         uses: actions/upload-artifact@v2
@@ -66,7 +72,7 @@ jobs:
           # Destination path(s)
           path: |
             out/generic/ASFItemDropper.*
-            idropdeflist.txt
+            out/generic/idropdeflist.txt
           if-no-files-found: warn # 'error', 'warn' or 'ignore' are also available, defaults to `warn`
 
       # - name: Upload ASF_ItemDropper generic-netf artifacts
