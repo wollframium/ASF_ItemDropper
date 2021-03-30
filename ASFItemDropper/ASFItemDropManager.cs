@@ -22,7 +22,7 @@ namespace ASFItemDropManager
 
         public Version Version => typeof(ASFItemDropManager).Assembly.GetName().Version ?? new Version("0");
 
-        public void OnLoaded() => ASF.ArchiLogger.LogGenericInfo($"ASF Item Drop Plugin v{Version.ToString()} by webben | fork by Sniper677");
+        public void OnLoaded() => ASF.ArchiLogger.LogGenericInfo($"ASF Item Dropper Plugin v{Version.ToString()} by webben | fork by Sniper677");
 
 
         public async Task<string?> OnBotCommand([NotNull] Bot bot, ulong steamID, [NotNull] string message, string[] args)
