@@ -50,13 +50,13 @@ jobs:
       #   run: |
       #     dotnet publish -c "${{ env.CONFIGURATION }}" -f "${{ env.NET_FRAMEWORK_VERSION }}" -o "out/generic-netf" -p:LinkDuringPublish=false --nologo
 
-      - name: Show build environment
+      - name: Show build environment 1
         shell: bash
         run: |
           set -eu
-
           pwd
           ls -la
+          echo "GitHub ref: ${{ github.ref }}"
 
       - name: Copy additinal files to ASF_ItemDropper generic artifacts
         shell: bash
@@ -75,6 +75,15 @@ jobs:
             out/generic/idropdeflist.txt
           if-no-files-found: warn # 'error', 'warn' or 'ignore' are also available, defaults to `warn`
 
+      - name: Show build environment 2
+        shell: bash
+        run: |
+          set -eu
+          pwd
+          ls -la
+          ls -la out/
+          ls -la out/generic
+
       # - name: Upload ASF_ItemDropper generic-netf artifacts
       #   uses: actions/upload-artifact@v2
       #   with:
@@ -86,24 +95,37 @@ jobs:
       #       idropdeflist.txt
       #     if-no-files-found: warn # 'error', 'warn' or 'ignore' are also available, defaults to `warn`
 
-      # - name: Create Release
-      #   id: create_release
+      - name: Prepare ASF_ItemDropper release archive
+        if: ${{ github.event_name = 'push' && startsWith(github.ref, 'refs/tags/') }}
+        shell: bash
+        run: |
+          set -eu
+          7z a -bd -slp -tzip -mm=Deflate -mx01 out/ASFItemDropper-generic.zip ./out/generic/ASFItemDropper*.dll ./out/generic/idropdeflist.txt
+          7z t out/ASFItemDropper-generic.zip
+          7z l out/ASFItemDropper-generic.zip
+          ls -la out/
+
+      # - name: Create ASF_ItemDropper GitHub release
+      #   id: github_release
+      #   if: ${{ github.event_name = 'push' && startsWith(github.ref, 'refs/tags/') }}
       #   uses: actions/create-release@v1
       #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #   with:
-      #     tag_name: Tag°${{ github.ref }}
-      #     release_name: Release ${{ github.ref }}
+      #     tag_name: ${{ github.ref }}
+      #     release_name: ASF_ItemDropper v${{ github.ref }}
       #     body: WIP
       #     draft: false
       #     prerelease: true
-      # - name: Upload Release Asset
+
+      # - name: Upload ASF_ItemDropper to GitHub release
       #   id: upload-release-asset
+      #   if: ${{ github.event_name = 'push' && startsWith(github.ref, 'refs/tags/') }}
       #   uses: actions/upload-release-asset@v1
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-      #     asset_path: ASFItemDropper.tar
-      #     asset_name: ASFItemDropper.tar
-      #     asset_content_type: application/tar
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: out/ASFItemDropper-generic.zip
+      #     asset_name: ASFItemDropper-generic.zip
+      #     asset_content_type: application/zip
