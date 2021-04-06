@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using ArchiSteamFarm;
 using SteamKit2;
@@ -95,7 +97,7 @@ namespace ASFItemDropManager
             var ownedReponse = await _PlayerService.SendMessage(x => x.GetOwnedGames(gamesOwnedRequest));
             var consumePlaytime = ownedReponse.GetDeserializedResponse<CPlayer_GetOwnedGames_Response>();
             consumePlaytime.games.ForEach(action => bot.ArchiLogger.LogGenericInfo(message: $"{action.appid} - {action.has_community_visible_stats} - {action.name} - {action.playtime_forever}"));
-            var resultFilteredGameById = consumePlaytime.games.Find(game => game.appid ==  ((int)appid) );
+            var resultFilteredGameById = consumePlaytime.games.Find(game => game.appid == ((int)appid) );
 
             if (consumePlaytime.games == null) bot.ArchiLogger.LogNullError(nameof(consumePlaytime.games));
             if (resultFilteredGameById == null) bot.ArchiLogger.LogNullError("resultFilteredGameById ");
@@ -106,6 +108,7 @@ namespace ASFItemDropManager
                 bot.ArchiLogger.LogGenericDebug(message: $"Playtime for {resultFilteredGameById.name} is: {resultFilteredGameById.playtime_forever}");
                 appidPlaytimeForever = resultFilteredGameById.playtime_forever;
             }
+
 
             // proceed only when the player has played the request game id
             if (resultGamesPlayed != null && resultGamesPlayed.item_json != "[]")
@@ -124,6 +127,14 @@ namespace ASFItemDropManager
                         {
                             summstring += $"Item drop @{item.StateChangedTimestamp}";
                         }
+
+                        // Getting last entry from iDrop_Logfile
+
+                        // Writing iDrop information to iDrop_Logfile
+                        //using (StreamWriter sw = File.AppendText(iDrop_Logfile))
+                        //{
+                        //    sw.Write($"{item.StateChangedTimestamp};{appidPlaytimeForever};0;0");
+                        //}
                     }
                     return summstring;
                 }
@@ -173,9 +184,11 @@ namespace ASFItemDropManager
             appidPlaytimeForever = Convert.ToUInt32(resultFilteredGameById.playtime_forever);
             uint appidPlaytimeHours = appidPlaytimeForever / 60;
             byte appidPlaytimeMinutes = Convert.ToByte(appidPlaytimeForever % 60);
+            string PTMinutes = appidPlaytimeForever.ToString("N0", CultureInfo.InvariantCulture);
+            string PTHours = appidPlaytimeHours.ToString("N0", CultureInfo.InvariantCulture);
 
             var summstring = "";
-            summstring += $"Playtime for game '{resultFilteredGameById.name}' is {appidPlaytimeForever}m = {appidPlaytimeHours}h {appidPlaytimeMinutes}m";
+            summstring += $"Playtime for game '{resultFilteredGameById.name}' is {PTMinutes}m = {PTHours}h {appidPlaytimeMinutes}m";
 
             return summstring;
         }
@@ -200,6 +213,83 @@ namespace ASFItemDropManager
             }
 
             return idropdeflist_txt;
+        }
+
+        // Testing section for checking new feature as single/independent command
+        internal string itemDropTest(uint appid, Bot bot)
+        {
+           // Creating iDrop_Logfile if not exists and write a header
+           string iDrop_Logfile = $"plugins\\ASFItemDropper\\droplogs\\{bot.BotName}_{appid}.log";
+
+           if(!File.Exists(iDrop_Logfile))
+           {
+                using (StreamWriter sw = File.AppendText(iDrop_Logfile))
+                {
+                    //sw.WriteLine($"# Droplog for bot '{bot.BotName}' and AppID {appid} ({resultFilteredGameById.name})");
+                    sw.WriteLine($"# Droplog for bot '{bot.BotName}' and AppID {appid}");
+                    sw.WriteLine($"# Timestamp;TimeDiff;Playtime;PlaytimeDiff");
+                }
+            }
+
+            string newline = "";
+            string lastline = File.ReadLines(iDrop_Logfile).Last();
+            string[] old_values = lastline.Split(';', StringSplitOptions.TrimEntries);
+
+            //DateTime nowutc = DateTime.UtcNow;
+
+            // date format to make it look like Droptime from Steam
+            string format = "yyyyMMdd'T'HHmmss'Z'";
+            // new dummy timestamp for to be added newline
+            string new_v0 = DateTime.UtcNow.ToString(format);
+
+            // converting dummy back to UTC for later
+            DateTime new_v0utc = DateTime.ParseExact(new_v0,format,CultureInfo.InvariantCulture);
+
+            // check if lastline from droplogfile is a comment, means still no dropdata in
+            if ( lastline.Substring(0,1) == "#" )
+            {
+                // using real overallplaytime from itemDrop
+                //uint new_v2 = Convert.ToUInt32(old_values[2]);
+                using (StreamWriter sw = File.AppendText(iDrop_Logfile))
+                {
+                    // writing first dummy data
+                    sw.WriteLine($"{new_v0};0.00:00:00;0;0");
+                }
+            }
+            else
+            {
+                // generating some random playtime for newline
+                // sum of old_playtime + random
+                Random rnd = new Random();
+                uint new_v2 = Convert.ToUInt32(Convert.ToUInt32(old_values[2]) + rnd.Next(10,50));
+
+                // calculating the playtime diff from new to old
+                uint new_v3 = new_v2 - Convert.ToUInt32(old_values[2]);
+
+                DateTime old_v0utc = DateTime.ParseExact(old_values[0],format,CultureInfo.InvariantCulture);
+                TimeSpan duration = new_v0utc.Subtract(old_v0utc);
+                //string new_v1 = duration.ToString();
+                //string new_v1 = duration.ToString("G",CultureInfo.InvariantCulture);
+                // best human readable format
+                string new_v1 = duration.ToString(@"d\.hh\:mm\:ss",CultureInfo.InvariantCulture);
+
+
+                // setup newline to be append to droplogfile
+                newline = $"{new_v0};{new_v1};{new_v2};{new_v3}";
+                using (StreamWriter sw = File.AppendText(iDrop_Logfile))
+                {
+                    sw.WriteLine($"{newline}");
+                }
+            }
+
+            // just some out to see the values on console or chat window
+            string RC = "\n";
+            RC += $"Lastline: {lastline}\n";
+            RC += $"Newline : {newline}\n";
+            RC += $"{new_v0utc}\n";
+            RC += $"{new_v0}\n";
+
+            return RC;
         }
 
     }
