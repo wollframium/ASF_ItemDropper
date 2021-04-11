@@ -92,7 +92,7 @@ namespace ASFItemDropManager
             if (resultGamesPlayed == null) bot.ArchiLogger.LogNullError("resultGamesPlayed");
 
 
-            CPlayer_GetOwnedGames_Request gamesOwnedRequest = new CPlayer_GetOwnedGames_Request { steamid = bot.SteamID,  include_appinfo = true, include_free_sub= true, include_played_free_games=true };
+            CPlayer_GetOwnedGames_Request gamesOwnedRequest = new CPlayer_GetOwnedGames_Request { steamid = bot.SteamID, include_appinfo=true, include_free_sub=true, include_played_free_games=true };
             _PlayerService = steamUnifiedMessages.CreateService<IPlayer>();
             var ownedReponse = await _PlayerService.SendMessage(x => x.GetOwnedGames(gamesOwnedRequest));
             var consumePlaytime = ownedReponse.GetDeserializedResponse<CPlayer_GetOwnedGames_Response>();
@@ -113,6 +113,7 @@ namespace ASFItemDropManager
             // proceed only when the player has played the request game id
             if (resultGamesPlayed != null && resultGamesPlayed.item_json != "[]")
             {
+
                 try
                 {
                     var summstring = "";
@@ -128,13 +129,51 @@ namespace ASFItemDropManager
                             summstring += $"Item drop @{item.StateChangedTimestamp}";
                         }
 
-                        // Getting last entry from iDrop_Logfile
+                        // item drop time taken from Steam, to be added to newline
+                        string new_v0 = item.StateChangedTimestamp;
 
-                        // Writing iDrop information to iDrop_Logfile
-                        //using (StreamWriter sw = File.AppendText(iDrop_Logfile))
-                        //{
-                        //    sw.Write($"{item.StateChangedTimestamp};{appidPlaytimeForever};0;0");
-                        //}
+                        // Creating iDrop_Logfile if not exists and write a header
+                        string iDrop_Logfile = $"plugins\\ASFItemDropper\\droplogs\\{bot.BotName}_{appid}.log";
+
+                        if(!File.Exists(iDrop_Logfile))
+                        {
+                            using (StreamWriter sw = File.AppendText(iDrop_Logfile))
+                            {
+                                // writing header information and first dummy data
+                                sw.WriteLine($"# Droplog for bot '{bot.BotName}' and AppID {appid} ({resultFilteredGameById.name})");
+                                sw.WriteLine($"# Timestamp;TimeDiff;Playtime;PlaytimeDiff");
+                                sw.WriteLine($"{new_v0};0.00:00:00;0;0");
+                            }
+                        }
+
+                        string newline = "";
+                        string lastline = File.ReadLines(iDrop_Logfile).Last();
+                        string[] old_values = lastline.Split(';', StringSplitOptions.TrimEntries);
+
+                        // date format of item drop time from Steam, needed for converting
+                        string format = "yyyyMMdd'T'HHmmss'Z'";
+
+                        // converting item drop times back to UTC for later calculation
+                        DateTime new_v0utc = DateTime.ParseExact(new_v0,format,CultureInfo.InvariantCulture);
+                        DateTime old_v0utc = DateTime.ParseExact(old_values[0],format,CultureInfo.InvariantCulture);
+
+                        // calculating difference between last two item drops (newline - lastline)
+                        TimeSpan duration = new_v0utc.Subtract(old_v0utc);
+                        string new_v1 = duration.ToString(@"d\.hh\:mm\:ss",CultureInfo.InvariantCulture);
+
+                        // setting and converting appidPlaytimeForever of game for later calculation
+                        uint new_v2 = Convert.ToUInt32(appidPlaytimeForever);
+
+                        // calculating the playtime difference from newline to lastline
+                        uint new_v3 = new_v2 - Convert.ToUInt32(old_values[2]);
+
+                        // setup and append newline to droplogfile
+                        newline = $"{new_v0};{new_v1};{new_v2};{new_v3}";
+
+                        using (StreamWriter sw = File.AppendText(iDrop_Logfile))
+                        {
+                            sw.WriteLine($"{newline}");
+                        }
                     }
                     return summstring;
                 }
