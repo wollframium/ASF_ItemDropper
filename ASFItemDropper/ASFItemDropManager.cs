@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Composition;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using ArchiSteamFarm;
 using ArchiSteamFarm.Plugins;
@@ -28,7 +29,17 @@ namespace ASFItemDropManager
             ASF.ArchiLogger.LogGenericInfo($"ASF Item Dropper Plugin v{Version.ToString()} by webben | fork by Sniper677");
 
             // Creating iDrop_Logdir for storing item drop information
-            string iDrop_Logdir = "plugins\\ASFItemDropper\\droplogs";
+            string iDrop_Logdir = "";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                // setting value for Linux OS
+                iDrop_Logdir = "plugins/ASFItemDropper/droplogs";
+            }
+            else
+            {
+                // setting value for Windows OS
+                iDrop_Logdir = "plugins\\ASFItemDropper\\droplogs";
+            }
             if(!Directory.Exists(iDrop_Logdir))
             {
                  Directory.CreateDirectory(iDrop_Logdir);

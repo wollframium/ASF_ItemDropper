@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using ArchiSteamFarm;
 using SteamKit2;
@@ -133,7 +134,17 @@ namespace ASFItemDropManager
                         string new_v0 = item.StateChangedTimestamp;
 
                         // Creating iDrop_Logfile if not exists and write a header
-                        string iDrop_Logfile = $"plugins\\ASFItemDropper\\droplogs\\{bot.BotName}_{appid}.log";
+                        string iDrop_Logfile = "";
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        {
+                            // setting filename for Linux OS
+                            iDrop_Logfile = $"plugins/ASFItemDropper/droplogs/{bot.BotName}_{appid}.log";
+                        }
+                        else
+                        {
+                            // setting filename for Windows OS
+                            iDrop_Logfile = $"plugins\\ASFItemDropper\\droplogs\\{bot.BotName}_{appid}.log";
+                        }
 
                         if(!File.Exists(iDrop_Logfile))
                         {
