@@ -2,7 +2,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Composition;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using ArchiSteamFarm;
 using ArchiSteamFarm.Plugins;
@@ -22,7 +24,27 @@ namespace ASFItemDropManager
 
         public Version Version => typeof(ASFItemDropManager).Assembly.GetName().Version ?? new Version("0");
 
-        public void OnLoaded() => ASF.ArchiLogger.LogGenericInfo($"ASF Item Dropper Plugin v{Version.ToString()} by webben | fork by Sniper677");
+        public void OnLoaded()
+        {
+            ASF.ArchiLogger.LogGenericInfo($"ASF Item Dropper Plugin v{Version.ToString()} by webben | fork by Sniper677");
+
+            // Creating iDrop_Logdir for storing item drop information
+            string iDrop_Logdir = "";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                // setting value for Linux OS
+                iDrop_Logdir = "plugins/ASFItemDropper/droplogs";
+            }
+            else
+            {
+                // setting value for Windows OS
+                iDrop_Logdir = "plugins\\ASFItemDropper\\droplogs";
+            }
+            if(!Directory.Exists(iDrop_Logdir))
+            {
+                 Directory.CreateDirectory(iDrop_Logdir);
+            }
+        }
 
 
         public async Task<string?> OnBotCommand([NotNull] Bot bot, ulong steamID, [NotNull] string message, string[] args)
@@ -85,6 +107,14 @@ namespace ASFItemDropManager
                 // idropdeflist bot1,bot2
                 case "IDROPDEFLIST" when args.Length == 2:
                     return await ItemDropDefList(steamID, args[1]).ConfigureAwait(false);
+
+                // idroptest bot1,bot2,bot appid1
+                case "IDROPTEST" when args.Length == 3:
+                    return await ItemDropTest(steamID, args[1], args[2]).ConfigureAwait(false);
+                // idroptest appid1
+                case "IDROPTEST" when args.Length == 2:
+                    return await ItemDropTest(steamID, bot, args[1]).ConfigureAwait(false);
+
                 default:
                     return null;
             }
@@ -199,7 +229,6 @@ namespace ASFItemDropManager
             return responses.Count > 0 ? string.Join(Environment.NewLine, responses) : null;
         }
 
-
         private static async Task<string?> CheckItem(ulong steamID, Bot bot, string appid, string itemdefId, bool longoutput)
         {
             if (!bot.HasAccess(steamID, BotConfig.EAccess.Master))
@@ -276,6 +305,37 @@ namespace ASFItemDropManager
 
             return responses.Count > 0 ? string.Join(Environment.NewLine, responses) : "No Results";
 
+        }
+
+        // Testing section for checking new feature as single/independent command
+        private static async Task<string?> ItemDropTest(ulong steamID, Bot bot, string appid)
+        {
+            if (!bot.HasAccess(steamID, BotConfig.EAccess.Master))
+            {
+                bot.ArchiLogger.LogGenericError("Bot has no access");
+                return null;
+            }
+            if (!uint.TryParse(appid, out uint appId))
+            {
+                return bot.Commands.FormatBotResponse(string.Format(Strings.ErrorIsInvalid, nameof(appId)));
+            }
+            if (!ItemDropHandlers.TryGetValue(bot, out ItemDropHandler? ItemDropHandler))
+            {
+                return bot.Commands.FormatBotResponse(string.Format(Strings.ErrorIsEmpty, nameof(ItemDropHandlers)));
+            }
+            return bot.Commands.FormatBotResponse(await Task.Run<string>(() => ItemDropHandler.itemDropTest(appId, bot)).ConfigureAwait(false));
+        }
+
+        private static async Task<string?> ItemDropTest(ulong steamID, string botNames, string appid)
+        {
+            HashSet<Bot>? bots = Bot.GetBots(botNames);
+            if ((bots == null) || (bots.Count == 0))
+            {
+                return Commands.FormatStaticResponse(string.Format(Strings.BotNotFound, botNames));
+            }
+            IList<string?> results = await Utilities.InParallel(bots.Select(bot => ItemDropTest(steamID, bot, appid))).ConfigureAwait(false);
+            List<string?> responses = new List<string?>(results.Where(result => !string.IsNullOrEmpty(result)));
+            return responses.Count > 0 ? string.Join(Environment.NewLine, responses) : "No Results";
         }
 
     }

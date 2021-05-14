@@ -18,6 +18,9 @@ git submodule foreach "git describe --tags;"
 
 if [[ -d ./out ]]; then
   rm -rf ./out
+  rm -rf ./ASFItemDropper/bin
+  rm -rf ./ASFItemDropper/obj
+  rm -rf ./ASF_ItemDropper.zip
 fi
 
 ##

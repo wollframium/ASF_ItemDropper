@@ -3,4 +3,4 @@ Team Fortress 2: 440 0 (deprecated; only ingame drops)
 Unturned: 304930 10000 (PT: 3h, TtnD: 72-96h)
 
 # Info: TtnD (Time to next Drop) => time between two item drops
-# Info: PT (PlayTime)            => minimal playtime to get an item drop
+# Info: PT   (PlayTime)          => minimal playtime to get an item drop
