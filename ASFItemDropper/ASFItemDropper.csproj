@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Authors>Sniper677</Authors>
-    <AssemblyVersion>0.3.2.1</AssemblyVersion>
+    <AssemblyVersion>0.3.2.2</AssemblyVersion>
     <TargetFrameworks>net5.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
