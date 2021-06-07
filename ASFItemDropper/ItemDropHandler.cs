@@ -1,11 +1,20 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Composition;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using ArchiSteamFarm;
+using ArchiSteamFarm.Core;
+using ArchiSteamFarm.Localization;
+using ArchiSteamFarm.Plugins.Interfaces;
+using ArchiSteamFarm.Steam;
+using ArchiSteamFarm.Steam.Data;
+using ArchiSteamFarm.Steam.Storage;
+using ArchiSteamFarm.Steam.Interaction;
+using JetBrains.Annotations;
 using SteamKit2;
 using SteamKit2.Internal;
 
