@@ -256,7 +256,17 @@ namespace ASFItemDropManager
         {
             ClientMsgProtobuf<CMsgClientGamesPlayed> response = new ClientMsgProtobuf<CMsgClientGamesPlayed>(EMsg.ClientGamesPlayed);
 
-            string IDDL_File = @"plugins\\ASFItemDropper\\idropdeflist.txt";
+            string IDDL_File = "";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                // setting filename for Linux OS
+                IDDL_File = $"plugins/ASFItemDropper/idropdeflist.txt";
+            }
+            else
+            {
+                // setting filename for Windows OS
+                IDDL_File = $"plugins\\ASFItemDropper\\idropdeflist.txt";
+            }
             string idropdeflist_txt = "";
 
             bool fileExists = File.Exists(IDDL_File);
