@@ -46,7 +46,10 @@ namespace QuickType
 
     public partial class ItemList
     {
-        public static ItemList[] FromJson(string json) => JsonConvert.DeserializeObject<ItemList[]>(json, QuickType.Converter.Settings);
+        public static ItemList[] FromJson(string json)
+        {
+            return JsonConvert.DeserializeObject<ItemList[]>(json, Converter.Settings) ?? Array.Empty<ItemList>();
+        }
     }
 
     public static class Serialize
@@ -56,7 +59,7 @@ namespace QuickType
 
     internal static class Converter
     {
-        public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
+        public static readonly JsonSerializerSettings Settings = new()
         {
             MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
             DateParseHandling = DateParseHandling.None,
@@ -70,19 +73,18 @@ namespace QuickType
     {
         public override bool CanConvert(Type t) => t == typeof(long) || t == typeof(long?);
 
-        public override object? ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
+        public override object? ReadJson(JsonReader reader, Type t, object? existingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.Null) return null;
             var value = serializer.Deserialize<string>(reader);
-            long l;
-            if (Int64.TryParse(value, out l))
+            if (long.TryParse(value, out var l))
             {
                 return l;
             }
             throw new Exception("Cannot unmarshal type long");
         }
 
-        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? untypedValue, JsonSerializer serializer)
         {
             if (untypedValue == null)
             {
@@ -94,6 +96,6 @@ namespace QuickType
             return;
         }
 
-        public static readonly ParseStringConverter Singleton = new ParseStringConverter();
+        public static readonly ParseStringConverter Singleton = new();
     }
 }
