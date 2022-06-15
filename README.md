@@ -1,14 +1,14 @@
 # ASF Item Dropper
-[![GitHub last commit](https://img.shields.io/github/last-commit/Sniper677/ASF_ItemDropper?color=brightgreen&label=Updated&logo=Github&logoColor=white)](https://github.com/Sniper677/ASF_ItemDropper/commits)
-[![GitHub all releases](https://img.shields.io/github/downloads/Sniper677/ASF_ItemDropper/total?color=brightgreen&label=Downloads&logo=Github&logoColor=white)](https://github.com/Sniper677/ASF_ItemDropper/releases)
-[![Wiki](https://img.shields.io/badge/Read-Wiki-orange?logo=Github)](https://github.com/Sniper677/ASF_ItemDropper/wiki)
+[![GitHub last commit](https://img.shields.io/github/last-commit/chr233/ASF_ItemDropper?color=brightgreen&label=Updated&logo=Github&logoColor=white)](https://github.com/chr233/ASF_ItemDropper/commits)
+[![GitHub all releases](https://img.shields.io/github/downloads/chr233/ASF_ItemDropper/total?color=brightgreen&label=Downloads&logo=Github&logoColor=white)](https://github.com/chr233/ASF_ItemDropper/releases)
+[![Wiki](https://img.shields.io/badge/Read-Wiki-orange?logo=Github)](https://github.com/chr233/ASF_ItemDropper/wiki)
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/Sniper677/ASF_ItemDropper?color=blue&label=Stable&logo=Github&logoColor=white)](https://github.com/Sniper677/ASF_ItemDropper/releases/latest)
-[![GitHub Release Date](https://img.shields.io/github/release-date/Sniper677/ASF_ItemDropper?color=brightgreen&label=Released&logo=Github&logoColor=white)](https://github.com/Sniper677/ASF_ItemDropper/releases/latest)
-[![GitHub release (latest by date)](https://img.shields.io/github/downloads/Sniper677/ASF_ItemDropper/latest/total?color=brightgreen&label=Downloads&logo=Github&logoColor=white)](https://github.com/Sniper677/ASF_ItemDropper/releases/latest)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/chr233/ASF_ItemDropper?color=blue&label=Stable&logo=Github&logoColor=white)](https://github.com/chr233/ASF_ItemDropper/releases/latest)
+[![GitHub Release Date](https://img.shields.io/github/release-date/chr233/ASF_ItemDropper?color=brightgreen&label=Released&logo=Github&logoColor=white)](https://github.com/chr233/ASF_ItemDropper/releases/latest)
+[![GitHub release (latest by date)](https://img.shields.io/github/downloads/chr233/ASF_ItemDropper/latest/total?color=brightgreen&label=Downloads&logo=Github&logoColor=white)](https://github.com/chr233/ASF_ItemDropper/releases/latest)
 
-[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/Sniper677/ASF_ItemDropper?color=blue&label=Prerelease&logo=Github&logoColor=white)](https://github.com/Sniper677/ASF_ItemDropper/releases)
-[![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/Sniper677/ASF_ItemDropper?color=brightgreen&label=Released&logo=Github&logoColor=white)](https://github.com/Sniper677/ASF_ItemDropper/releases)
+[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/chr233/ASF_ItemDropper?color=blue&label=Prerelease&logo=Github&logoColor=white)](https://github.com/chr233/ASF_ItemDropper/releases)
+[![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/chr233/ASF_ItemDropper?color=brightgreen&label=Released&logo=Github&logoColor=white)](https://github.com/chr233/ASF_ItemDropper/releases)
 
 ## DISCLAIMER
 
@@ -20,7 +20,7 @@ This plugin for [ASF](https://github.com/JustArchiNET/ArchiSteamFarm/) allows yo
 
 ### Installation
 
-- download .zip file from [latest release](https://github.com/Sniper677/ASF_ItemDropper/releases/latest) named `ASFItemDropper-generic.zip`.
+- download .zip file from [latest release](https://github.com/chr233/ASF_ItemDropper/releases/) named `ASFItemDropper.zip`.
 - unpack downloaded .zip file to `plugins` folder inside your ASF folder.
 - (re)start ASF, you should get a message indicating that plugin loaded successfully.
 
