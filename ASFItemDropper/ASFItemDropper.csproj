@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<Authors>Sniper677</Authors>
-		<AssemblyVersion>0.3.3.1</AssemblyVersion>
+		<Authors>chr_</Authors>
+		<AssemblyVersion>0.3.3.3</AssemblyVersion>
 		<TargetFrameworks>net6.0</TargetFrameworks>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
