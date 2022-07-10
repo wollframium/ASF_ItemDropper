@@ -1,7 +1,6 @@
 # ASF Item Dropper
 [![GitHub last commit](https://img.shields.io/github/last-commit/chr233/ASF_ItemDropper?color=brightgreen&label=Updated&logo=Github&logoColor=white)](https://github.com/chr233/ASF_ItemDropper/commits)
 [![GitHub all releases](https://img.shields.io/github/downloads/chr233/ASF_ItemDropper/total?color=brightgreen&label=Downloads&logo=Github&logoColor=white)](https://github.com/chr233/ASF_ItemDropper/releases)
-[![Wiki](https://img.shields.io/badge/Read-Wiki-orange?logo=Github)](https://github.com/chr233/ASF_ItemDropper/wiki)
 
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/chr233/ASF_ItemDropper?color=blue&label=Stable&logo=Github&logoColor=white)](https://github.com/chr233/ASF_ItemDropper/releases/latest)
 [![GitHub Release Date](https://img.shields.io/github/release-date/chr233/ASF_ItemDropper?color=brightgreen&label=Released&logo=Github&logoColor=white)](https://github.com/chr233/ASF_ItemDropper/releases/latest)

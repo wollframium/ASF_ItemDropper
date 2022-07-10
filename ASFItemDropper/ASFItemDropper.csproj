@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<Authors>chr_</Authors>
-		<AssemblyVersion>0.3.3.3</AssemblyVersion>
+		<AssemblyVersion>0.3.4.3</AssemblyVersion>
 		<TargetFrameworks>net6.0</TargetFrameworks>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
