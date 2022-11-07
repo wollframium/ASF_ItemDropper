@@ -9,6 +9,8 @@
 [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/chr233/ASF_ItemDropper?color=blue&label=Prerelease&logo=Github&logoColor=white)](https://github.com/chr233/ASF_ItemDropper/releases)
 [![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/chr233/ASF_ItemDropper?color=brightgreen&label=Released&logo=Github&logoColor=white)](https://github.com/chr233/ASF_ItemDropper/releases)
 
+> No longer maintained, :-D 
+
 ## DISCLAIMER
 
 This plugin is provided on AS-IS basis, without any guarantee at all. Author is not responsible for any harm, direct or indirect, that may be caused by using this plugin. You use this plugin at your own risk.
