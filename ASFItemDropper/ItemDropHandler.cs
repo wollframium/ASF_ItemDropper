@@ -1,22 +1,10 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Composition;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using ArchiSteamFarm.Core;
-using ArchiSteamFarm.Localization;
-using ArchiSteamFarm.Plugins.Interfaces;
+﻿using ArchiSteamFarm.Core;
 using ArchiSteamFarm.Steam;
-using ArchiSteamFarm.Steam.Data;
-using ArchiSteamFarm.Steam.Storage;
-using ArchiSteamFarm.Steam.Interaction;
-using JetBrains.Annotations;
 using SteamKit2;
 using SteamKit2.Internal;
+using System.Collections.Concurrent;
+using System.Globalization;
+using System.Runtime.InteropServices;
 
 namespace ASFItemDropManager
 {
@@ -107,7 +95,7 @@ namespace ASFItemDropManager
             var ownedReponse = await _PlayerService.SendMessage(x => x.GetOwnedGames(gamesOwnedRequest));
             var consumePlaytime = ownedReponse.GetDeserializedResponse<CPlayer_GetOwnedGames_Response>();
             consumePlaytime.games.ForEach(action => bot.ArchiLogger.LogGenericInfo(message: $"{action.appid} - {action.has_community_visible_stats} - {action.name} - {action.playtime_forever}"));
-            var resultFilteredGameById = consumePlaytime.games.Find(game => game.appid == ((int)appid) );
+            var resultFilteredGameById = consumePlaytime.games.Find(game => game.appid == ((int)appid));
 
             if (consumePlaytime.games == null) bot.ArchiLogger.LogNullError(nameof(consumePlaytime.games));
             if (resultFilteredGameById == null) bot.ArchiLogger.LogNullError("resultFilteredGameById ");
@@ -155,7 +143,7 @@ namespace ASFItemDropManager
                             iDrop_Logfile = $"plugins\\ASFItemDropper\\droplogs\\{bot.BotName}_{appid}.log";
                         }
 
-                        if(!File.Exists(iDrop_Logfile))
+                        if (!File.Exists(iDrop_Logfile))
                         {
                             using (StreamWriter sw = File.AppendText(iDrop_Logfile))
                             {
@@ -174,12 +162,12 @@ namespace ASFItemDropManager
                         string format = "yyyyMMdd'T'HHmmss'Z'";
 
                         // converting item drop times back to UTC for later calculation
-                        DateTime new_v0utc = DateTime.ParseExact(new_v0,format,CultureInfo.InvariantCulture);
-                        DateTime old_v0utc = DateTime.ParseExact(old_values[0],format,CultureInfo.InvariantCulture);
+                        DateTime new_v0utc = DateTime.ParseExact(new_v0, format, CultureInfo.InvariantCulture);
+                        DateTime old_v0utc = DateTime.ParseExact(old_values[0], format, CultureInfo.InvariantCulture);
 
                         // calculating difference between last two item drops (newline - lastline)
                         TimeSpan duration = new_v0utc.Subtract(old_v0utc);
-                        string new_v1 = duration.ToString(@"d\.hh\:mm\:ss",CultureInfo.InvariantCulture);
+                        string new_v1 = duration.ToString(@"d\.hh\:mm\:ss", CultureInfo.InvariantCulture);
 
                         // setting and converting appidPlaytimeForever of game for later calculation
                         uint new_v2 = Convert.ToUInt32(appidPlaytimeForever);
@@ -233,7 +221,7 @@ namespace ASFItemDropManager
             var ownedReponse = await _PlayerService.SendMessage(x => x.GetOwnedGames(gamesOwnedRequest));
             var consumePlaytime = ownedReponse.GetDeserializedResponse<CPlayer_GetOwnedGames_Response>();
             consumePlaytime.games.ForEach(action => bot.ArchiLogger.LogGenericInfo(message: $"{action.appid} - {action.has_community_visible_stats} - {action.name} - {action.playtime_forever}"));
-            var resultFilteredGameById = consumePlaytime.games.Find(game => game.appid == ((int)appid) );
+            var resultFilteredGameById = consumePlaytime.games.Find(game => game.appid == ((int)appid));
 
             if (consumePlaytime.games == null) bot.ArchiLogger.LogNullError(nameof(consumePlaytime.games));
             if (resultFilteredGameById == null) bot.ArchiLogger.LogNullError("resultFilteredGameById");
@@ -287,11 +275,11 @@ namespace ASFItemDropManager
         // Testing section for checking new feature as single/independent command
         internal string itemDropTest(uint appid, Bot bot)
         {
-           // Creating iDrop_Logfile if not exists and write a header
-           string iDrop_Logfile = $"plugins\\ASFItemDropper\\droplogs\\{bot.BotName}_{appid}.log";
+            // Creating iDrop_Logfile if not exists and write a header
+            string iDrop_Logfile = $"plugins\\ASFItemDropper\\droplogs\\{bot.BotName}_{appid}.log";
 
-           if(!File.Exists(iDrop_Logfile))
-           {
+            if (!File.Exists(iDrop_Logfile))
+            {
                 using (StreamWriter sw = File.AppendText(iDrop_Logfile))
                 {
                     //sw.WriteLine($"# Droplog for bot '{bot.BotName}' and AppID {appid} ({resultFilteredGameById.name})");
@@ -312,10 +300,10 @@ namespace ASFItemDropManager
             string new_v0 = DateTime.UtcNow.ToString(format);
 
             // converting dummy back to UTC for later
-            DateTime new_v0utc = DateTime.ParseExact(new_v0,format,CultureInfo.InvariantCulture);
+            DateTime new_v0utc = DateTime.ParseExact(new_v0, format, CultureInfo.InvariantCulture);
 
             // check if lastline from droplogfile is a comment, means still no dropdata in
-            if ( lastline.Substring(0,1) == "#" )
+            if (lastline.Substring(0, 1) == "#")
             {
                 // using real overallplaytime from itemDrop
                 //uint new_v2 = Convert.ToUInt32(old_values[2]);
@@ -330,17 +318,17 @@ namespace ASFItemDropManager
                 // generating some random playtime for newline
                 // sum of old_playtime + random
                 Random rnd = new Random();
-                uint new_v2 = Convert.ToUInt32(Convert.ToUInt32(old_values[2]) + rnd.Next(10,50));
+                uint new_v2 = Convert.ToUInt32(Convert.ToUInt32(old_values[2]) + rnd.Next(10, 50));
 
                 // calculating the playtime diff from new to old
                 uint new_v3 = new_v2 - Convert.ToUInt32(old_values[2]);
 
-                DateTime old_v0utc = DateTime.ParseExact(old_values[0],format,CultureInfo.InvariantCulture);
+                DateTime old_v0utc = DateTime.ParseExact(old_values[0], format, CultureInfo.InvariantCulture);
                 TimeSpan duration = new_v0utc.Subtract(old_v0utc);
                 //string new_v1 = duration.ToString();
                 //string new_v1 = duration.ToString("G",CultureInfo.InvariantCulture);
                 // best human readable format
-                string new_v1 = duration.ToString(@"d\.hh\:mm\:ss",CultureInfo.InvariantCulture);
+                string new_v1 = duration.ToString(@"d\.hh\:mm\:ss", CultureInfo.InvariantCulture);
 
 
                 // setup newline to be append to droplogfile
