@@ -81,32 +81,13 @@ jobs:
             release created bt github actions
           prerelease: true
 
-      - name: Upload ${{ env.PROJECT_NAME }}-zh-Hans to GitHub release
+      - name: Upload ${{ env.PROJECT_NAME }} to GitHub release
         uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.github_release.outputs.upload_url }}
-          asset_path: out/${{ env.PROJECT_NAME }}-zh-Hans.zip
-          asset_name: ${{ env.PROJECT_NAME }}-zh-Hans.zip
+          asset_path: out/${{ env.PROJECT_NAME }}.zip
+          asset_name: ${{ env.PROJECT_NAME }}.zip
           asset_content_type: application/zip
 
-      - name: Upload ${{ env.PROJECT_NAME }}-en-US to GitHub release
-        uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.github_release.outputs.upload_url }}
-          asset_path: out/${{ env.PROJECT_NAME }}-en-US.zip
-          asset_name: ${{ env.PROJECT_NAME }}-en-US.zip
-          asset_content_type: application/zip
-
-      - name: Upload ${{ env.PROJECT_NAME }}-ru-RU to GitHub release
-        uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.github_release.outputs.upload_url }}
-          asset_path: out/${{ env.PROJECT_NAME }}-ru-RU.zip
-          asset_name: ${{ env.PROJECT_NAME }}-ru-RU.zip
-          asset_content_type: application/zip
