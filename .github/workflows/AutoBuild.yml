@@ -51,22 +51,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3.1.0
 
-      - name: Download ${{ env.PROJECT_NAME }}-zh-Hans artifact from windows-latest
+      - name: Download ${{ env.PROJECT_NAME }} artifact from windows-latest
         uses: actions/download-artifact@v3.0.1
         with:
-          name: ${{ env.PROJECT_NAME }}-zh-Hans.zip
-          path: out
-
-      - name: Download ${{ env.PROJECT_NAME }}-en-US artifact from windows-latest
-        uses: actions/download-artifact@v3.0.1
-        with:
-          name: ${{ env.PROJECT_NAME }}-en-US.zip
-          path: out
-
-      - name: Download ${{ env.PROJECT_NAME }}-ru-RU artifact from windows-latest
-        uses: actions/download-artifact@v3.0.1
-        with:
-          name: ${{ env.PROJECT_NAME }}-ru-RU.zip
+          name: ${{ env.PROJECT_NAME }}.zip
           path: out
 
       - name: Create ${{ env.PROJECT_NAME }} GitHub release
