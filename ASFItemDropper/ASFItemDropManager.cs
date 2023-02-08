@@ -113,7 +113,7 @@ namespace ASFItemDropManager
             ItemDropHandler CurrentBotItemDropHandler = new();
             ItemDropHandlers.TryAdd(bot, CurrentBotItemDropHandler);
             IReadOnlyCollection<ClientMsgHandler> result = new HashSet<ClientMsgHandler> { CurrentBotItemDropHandler };
-            return Task.FromResult(result);
+            return Task.FromResult<IReadOnlyCollection<ClientMsgHandler>?>(result);
         }
 
         //Responses
