@@ -11,11 +11,6 @@ env:
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [zh-Hans, en-US, ru-RU]
-
     runs-on: windows-latest
 
     steps:
@@ -32,29 +27,21 @@ jobs:
       - name: Verify .NET Core
         run: dotnet --info
 
-      - name: Change language file to ${{ matrix.language }}
-        shell: pwsh
-        run: |
-          $projectName = "${{ env.PROJECT_NAME }}";
-          $language = "${{ matrix.language }}";
-          $localizationFolder = ".\$projectName\Localization";
-          Copy-Item -Path "$localizationFolder\Langs.$language.resx" -Destination "$localizationFolder\Langs.resx" -Force;
-
       - name: Restore packages in preparation for ${{ env.PROJECT_NAME }} publishing
         run: dotnet restore ${{ env.PROJECT_NAME }} -p:ContinuousIntegrationBuild=true --nologo
 
-      - name: Publish ${{ env.PROJECT_NAME }} ${{ matrix.language }}
+      - name: Publish ${{ env.PROJECT_NAME }}
         run: dotnet publish ${{ env.PROJECT_NAME }} -o ./tmp/ -c Release
 
       - name: Zip files
-        run: 7z a -bd -slp -tzip -mm=Deflate -mx=5 -mfb=150 -mpass=10 "./dist/${{ env.PROJECT_NAME }}-${{ matrix.language }}.zip" "./tmp/${{ env.PROJECT_NAME }}.dll"
+        run: 7z a -bd -slp -tzip -mm=Deflate -mx=5 -mfb=150 -mpass=10 "./dist/${{ env.PROJECT_NAME }}.zip" "./tmp/${{ env.PROJECT_NAME }}.dll"
 
-      - name: Upload ${{ env.PROJECT_NAME }} ${{ matrix.language }}
+      - name: Upload ${{ env.PROJECT_NAME }}
         continue-on-error: true
         uses: actions/upload-artifact@v3.1.1
         with:
-          name: ${{ env.PROJECT_NAME }}-${{ matrix.language }}.zip
-          path: ./dist/${{ env.PROJECT_NAME }}-${{ matrix.language }}.zip
+          name: ${{ env.PROJECT_NAME }}.zip
+          path: ./dist/${{ env.PROJECT_NAME }}.zip
 
   release:
     needs: build
