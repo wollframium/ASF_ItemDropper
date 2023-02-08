@@ -1,32 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<Authors>chr_</Authors>
-		<AssemblyVersion>0.3.4.3</AssemblyVersion>
-		<TargetFrameworks>net6.0</TargetFrameworks>
-		<Nullable>enable</Nullable>
-		<LangVersion>latest</LangVersion>
+		<OutputType>Library</OutputType>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-		<PackageReference Include="System.Composition.AttributedModel" Version="6.0.0" />
+		<ProjectReference Include="..\ArchiSteamFarm\ArchiSteamFarm\ArchiSteamFarm.csproj" ExcludeAssets="all" Private="False" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="SteamKit2">
-			<HintPath>..\ArchiSteamFarm\ArchiSteamFarm\lib\SteamKit2.dll</HintPath>
-		</Reference>
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\ArchiSteamFarm\ArchiSteamFarm\ArchiSteamFarm.csproj">
-		  <Private>False</Private>
-		</ProjectReference>
+		<PackageReference Include="Newtonsoft.Json" IncludeAssets="compile" />
+		<PackageReference Include="System.Composition.AttributedModel"  />
+		<PackageReference Include="SteamKit2" IncludeAssets="compile" />
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<Copy SourceFiles="$(TargetPath)" DestinationFolder="..\ArchiSteamFarm\ArchiSteamFarm\bin\$(Configuration)\$(TargetFramework)\plugins\" SkipUnchangedFiles="true" />
 	</Target>
-
+	
 </Project>
